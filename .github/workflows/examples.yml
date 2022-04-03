@@ -1,6 +1,9 @@
-name: Examples
+name: ESP32-S2
 
-on: [push, pull_request]
+on:
+  push:
+    branches:
+      - esp32s2
 
 jobs:
   build:
@@ -11,12 +14,10 @@ jobs:
         python-version: [3.7]
         example:
           - "examples/arduino-blink"
-          - "examples/arduino-briki-internal-libs"
           - "examples/arduino-wifiscan"
           - "examples/espidf-arduino-blink"
           - "examples/espidf-arduino-wifiscan"
           - "examples/espidf-aws-iot"
-          - "examples/espidf-ble-eddystone"
           - "examples/espidf-coap-server"
           - "examples/espidf-exceptions"
           - "examples/espidf-hello-world"
@@ -27,8 +28,7 @@ jobs:
           - "examples/espidf-storage-spiffs"
           - "examples/espidf-ulp-adc"
           - "examples/espidf-ulp-pulse"
-          - "examples/pumbaa-blink"
-          - "examples/simba-blink"
+
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v2
