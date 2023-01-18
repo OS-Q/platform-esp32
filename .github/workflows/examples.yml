@@ -1,46 +1,60 @@
-name: Examples
+name: examples
 
-on: [push, pull_request]
+on:
+  # schedule:
+  #   - cron: "30 20 * * *"
+  push:
+    branches:
+      - main
+    paths-ignore:
+      - '**.md'
+      - '**.rst'
+      - 'LICENSE'
+      - '.gitignore'
 
 jobs:
   build:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest, windows-latest, macos-latest]
         example:
-          - "examples/arduino-ble5-advertising"
-          - "examples/arduino-blink"
-          - "examples/arduino-briki-internal-libs"
-          - "examples/arduino-usb-keyboard"
-          - "examples/arduino-wifiscan"
-          - "examples/espidf-arduino-blink"
-          - "examples/espidf-arduino-wifiscan"
-          - "examples/espidf-aws-iot"
-          - "examples/espidf-ble-eddystone"
-          - "examples/espidf-coap-server"
-          - "examples/espidf-exceptions"
-          - "examples/espidf-hello-world"
-          - "examples/espidf-http-request"
-          - "examples/espidf-peripherals-uart"
-          - "examples/espidf-peripherals-usb"
-          - "examples/espidf-storage-sdcard"
-          - "examples/espidf-storage-spiffs"
-          - "examples/espidf-ulp-adc"
-          - "examples/espidf-ulp-pulse"
+          - "arduino-ble5-advertising"
+          - "arduino-blink"
+          - "arduino-briki-internal-libs"
+          - "arduino-usb-keyboard"
+          - "arduino-wifiscan"
+          - "espidf-arduino-blink"
+          - "espidf-arduino-wifiscan"
+          - "espidf-aws-iot"
+          - "espidf-ble-eddystone"
+          - "espidf-coap-server"
+          - "espidf-exceptions"
+          - "espidf-hello-world"
+          - "espidf-http-request"
+          - "espidf-peripherals-uart"
+          - "espidf-peripherals-usb"
+          - "espidf-storage-sdcard"
+          - "espidf-storage-spiffs"
+          - "espidf-ulp-adc"
+          - "espidf-ulp-pulse"
+        os: [ubuntu-latest, windows-latest, macos-latest]
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v3
         with:
+          token: ${{ secrets.OSQ_REPO_TOKEN }}
           submodules: "recursive"
+
       - name: Set up Python
-        uses: actions/setup-python@v3
+        uses: actions/setup-python@v4
         with:
           python-version: "3.9"
       - name: Install dependencies
         run: |
-          pip install -U https://github.com/platformio/platformio/archive/develop.zip
+          pip install -U https://github.com/OS-Q/pio/archive/main.zip
           pio pkg install --global --platform symlink://.
+
       - name: Build examples
+        working-directory: examples
         run: |
           pio run -d ${{ matrix.example }}
